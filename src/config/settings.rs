@@ -3,12 +3,19 @@ use serde::Deserialize;
 #[derive(Debug, Clone, Deserialize)]
 pub struct Settings {
     pub server: ServerSettings,
+    pub database: DatabaseSettings,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct ServerSettings {
     pub host: String,
     pub port: u16,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct DatabaseSettings {
+    pub url: String,
+    pub max_connections: u32,
 }
 
 impl Settings {

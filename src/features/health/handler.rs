@@ -1,4 +1,11 @@
+use crate::http::{response::ok};
+use crate::http::error::ApiResult;
+use crate::http::response::ApiJson;
 
-pub async fn ready() -> &'static str {
-    "My app is ready, he he he he !!!"
+pub async fn live() -> ApiResult<ApiJson<&'static str>>{
+    Ok(ok("Your app is live"))
+}
+
+pub async fn ready() -> ApiResult<ApiJson<&'static str>> {
+    Ok(ok("Ready"))
 }

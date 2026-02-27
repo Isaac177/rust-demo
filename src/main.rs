@@ -1,7 +1,7 @@
 use demo::{
     app::{router::create_router, state::AppState},
     config::Settings,
-    db::pool::new_pool,
+    db::{migrate::run as run_migrations, pool::new_pool},
     observability,
 };
 use tokio::net::TcpListener;
@@ -16,6 +16,8 @@ async fn main() -> anyhow::Result<()> {
         &settings.database.url,
         settings.database.max_connections,
     ).await?;
+
+    run_migrations(&db_pool).await?;
 
     let app_state = AppState {
         settings: settings.clone(),

@@ -13,6 +13,9 @@ pub fn create_router(state: AppState) -> Router {
         .route("/health/ready", get(crate::features::health::handler::ready))
         .route("/auth/register", post(crate::features::auth::handler::register))
         .route("/auth/login", post(crate::features::auth::handler::login))
+        .route("/news", get(crate::features::news::handler::get_all_news_handler))
+        .route("/news/{id}", get(crate::features::news::handler::get_news_by_id))
+        .route("/news/create", post(crate::features::news::handler::create_news_handler))
         .layer(PropagateRequestIdLayer::x_request_id())
         .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))
         .layer(

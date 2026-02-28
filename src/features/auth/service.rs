@@ -45,7 +45,7 @@ pub async fn login(
     let user = find_user_by_email(pool, &input.email)
         .await
         .map_err(internal_error)?
-        .ok_or_else(| | AppError::Unauthorized("invalid credentials".to_string()))?;
+        .ok_or_else(|| AppError::Unauthorized("invalid credentials".to_string()))?;
 
     if !user.is_active {
         return Err(AppError::Forbidden("user account is inactive".to_string()));

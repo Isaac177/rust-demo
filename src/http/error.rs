@@ -9,6 +9,10 @@ use serde::Serialize;
 #[derive(Debug)]
 pub enum AppError {
     Internal(String),
+    Validation(String),
+    Unauthorized(String),
+    Forbidden(String),
+    Conflict(String),
 }
 
 #[derive(Debug, Serialize)]
@@ -23,6 +27,10 @@ impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let (status, message) = match self {
             AppError::Internal(message) => (StatusCode::INTERNAL_SERVER_ERROR, message),
+            AppError::Validation(message) => (StatusCode::BAD_REQUEST, message),
+            AppError::Unauthorized(message) => (StatusCode::UNAUTHORIZED, message),
+            AppError::Forbidden(message) => (StatusCode::FORBIDDEN, message),
+            AppError::Conflict(message) => (StatusCode::CONFLICT, message),
         };
 
         let body = Json(ErrorBody {

@@ -1,0 +1,11 @@
+-- Add migration script here
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS password_hash TEXT NOT NULL DEFAULT '',
+    ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMPTZ NULL;
+
+ALTER TABLE users
+    ALTER COLUMN password_hash DROP DEFAULT;
+
+CREATE INDEX IF NOT EXISTS idx_users_is_active ON users(is_active);

@@ -4,6 +4,7 @@ use serde::Deserialize;
 pub struct Settings {
     pub server: ServerSettings,
     pub database: DatabaseSettings,
+    pub auth: AuthSettings,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -16,6 +17,11 @@ pub struct ServerSettings {
 pub struct DatabaseSettings {
     pub url: String,
     pub max_connections: u32,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct AuthSettings {
+    pub jwt_secret: String,
 }
 
 impl Settings {

@@ -1,4 +1,4 @@
-use axum::{routing::get, Router};
+use axum::{routing::{get, post}, Router};
 use tower_http::{
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer}
@@ -11,6 +11,8 @@ pub fn create_router(state: AppState) -> Router {
     Router::new()
         .route("/health/live", get(crate::features::health::handler::live))
         .route("/health/ready", get(crate::features::health::handler::ready))
+        .route("/auth/register", post(crate::features::auth::handler::register))
+        .route("/auth/login", post(crate::features::auth::handler::login))
         .layer(PropagateRequestIdLayer::x_request_id())
         .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))
         .layer(

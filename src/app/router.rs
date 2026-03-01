@@ -1,4 +1,4 @@
-use axum::{routing::{get, post}, Router};
+use axum::{routing::{get, post, patch, delete}, Router};
 use tower_http::{
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer}
@@ -15,6 +15,8 @@ pub fn create_router(state: AppState) -> Router {
         .route("/auth/login", post(crate::features::auth::handler::login))
         .route("/news", get(crate::features::news::handler::get_all_news_handler))
         .route("/news/{id}", get(crate::features::news::handler::get_news_by_id))
+        .route("/news/{id}", patch(crate::features::news::handler::update_news_handler))
+        .route("/news/{id}", delete(crate::features::news::handler::delete_news_handler))
         .route("/news/create", post(crate::features::news::handler::create_news_handler))
         .layer(PropagateRequestIdLayer::x_request_id())
         .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))

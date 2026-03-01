@@ -1,11 +1,12 @@
 use crate::app::state::AppState;
 use crate::features::auth::current_user::CurrentUser;
 use crate::features::news::dto::{NewsInput, NewsResponse};
-use crate::features::news::service::{create_post, get_all_posts, get_post_by_id};
+use crate::features::news::service::{create_post, delete_post, get_all_posts, get_post_by_id, update_post};
 use crate::http::error::{ApiResult, AppError};
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::Json;
+use crate::features::news::repository::update_news;
 
 pub async fn create_news_handler(
     State(state): State<AppState>,
@@ -32,4 +33,27 @@ pub async fn get_news_by_id(
     let response = get_post_by_id(&state.db_pool, id).await?;
 
     Ok(Json(response))
+}
+
+pub async fn update_news_handler(
+    State(state): State<AppState>,
+    current_user: CurrentUser,
+    Path(id): Path<i64>,
+    Json(input): Json<NewsInput>,
+) -> Result<Json<NewsResponse>, AppError> {
+    let response = update_post(
+        &state.db_pool, id, current_user.id, input
+    ).await?;
+
+    Ok(Json(response))
+}
+
+pub async fn delete_news_handler(
+    State(state): State<AppState>,
+    current_user: CurrentUser,
+    Path(id): Path<i64>
+) -> Result<StatusCode, AppError> {
+    delete_post(&state.db_pool, id, current_user.id).await?;
+
+    Ok(StatusCode::NO_CONTENT)
 }
